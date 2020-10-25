@@ -13,97 +13,137 @@
         class="exemple-select ml-2"
       ></b-form-select>
     </b-row>
-    <h5>Entrez le résultat final dans le formulaire ci dessous</h5>
-    <label for="editor"
-      >Note: Placez les mots clés(qui seront dans les trous) entre crochets, ex:
-      les règles de [sécurité]</label
-    >
-    <b-form-textarea
-      id="editor"
-      v-model="text"
-      placeholder="Votre texte ici..."
-      rows="15"
-      max-rows="15"
-    ></b-form-textarea>
-    <client-only>
-      <vue-editor v-model="text" :editorOptions="customToolbar"></vue-editor>
-    </client-only>
-    <b-button variant="outline-success" class="mt-3" @click="handleKeyWords"
-      >Suivant</b-button
-    >
-    <div class="mt-4" v-if="step2 === true">
-      <p>Pour chaque mot clé, renseignez 2 mauvaises réponses</p>
-      <b-table striped hover :items="keyWordsTable" :fields="fields">
-        <template v-slot:cell(badAnswer1)="row">
-          <b-form-input v-model="row.item.badAnswer1" />
-        </template>
-        <template v-slot:cell(badAnswer2)="row">
-          <b-form-input v-model="row.item.badAnswer2" />
-        </template>
-      </b-table>
-      <b-button
-        variant="outline-success"
-        class="mt-3"
-        @click="handleEditAnswers"
-        >Suivant</b-button
-      >
-    </div>
-    <p></p>
+    <b-tabs content-class="mt-3">
+      <b-tab title="Édition" active>
+        <h5>Entrez le(s) résultat final dans le formulaire ci dessous</h5>
+        <label for="editor"
+          >Note: Placez les mots clés(qui seront dans les trous) entre crochets,
+          ex: les règles de [sécurité]</label
+        >
+        <client-only>
+          <vue-editor
+            v-model="text"
+            :editorOptions="customToolbar"
+          ></vue-editor>
+        </client-only>
+        <b-button variant="outline-success" class="mt-3" @click="handleKeyWords"
+          >Suivant</b-button
+        >
+        <div class="mt-4" v-if="keyWordsTable.length > 0">
+          <p>Pour chaque bonne réponse, renseignez 2 mauvaises réponses</p>
+          <b-table striped hover :items="keyWordsTable" :fields="fields">
+            <template v-slot:cell(badAnswer1)="row">
+              <b-form-input v-model="row.item.badAnswer1" />
+            </template>
+            <template v-slot:cell(badAnswer2)="row">
+              <b-form-input v-model="row.item.badAnswer2" />
+            </template>
+          </b-table>
+        </div>
+      </b-tab>
+      <b-tab title="Résultat" @click="handleResult">
+        <b-col v-for="(item, key) in resultTable" :key="key">
+          <b-form-select
+            :options="item"
+            class="exemple-select ml-2"
+          ></b-form-select>
+        </b-col>
+      </b-tab>
+    </b-tabs>
   </div>
 </template>
 
 <script>
+import { collectCoverage } from "~/jest.config";
 export default {
   data() {
     return {
       text: "",
+      result: [],
       keyWordsTable: [],
-      step2: false,
+      resultTable: [],
       fields: [
         { goodAnswer: "Bonne Réponse" },
         { badAnswer1: "Mauvaise Réponse 1" },
-        { badAnswer2: "Mauvaise Réponse 2" },
+        { badAnswer2: "Mauvaise Réponse 2" }
       ],
       exemple1: [
         { value: "", text: "pouvez" },
-        { value: "", text: "pourrez" },
+        { value: "", text: "pourrez" }
       ],
       exemple2: [
         { value: "", text: "quizz" },
         { value: "", text: "module" },
-        { value: "", text: "exercice" },
+        { value: "", text: "exercice" }
       ],
       customToolbar: {
         modules: {
-          toolbar: false,
-        },
-      },
+          toolbar: false
+        }
+      }
     };
   },
+  watch: {
+    text: function(newVal, val) {
+      // Span does not work in watch
+
+      // this.keyWordsTable = [];
+      // const match = newVal.match(/\[.*?\]/g);
+      // match?.map(el => {
+      //   newVal.replace(
+      //     el,
+      //     `<span style="background-color: rgb(255, 194, 102);">${el}</span>`
+      //   );
+      //   this.keyWordsTable.push({
+      //     goodAnswer: el.slice(1, -1),
+      //     badAnswer1: "",
+      //     badAnswer2: ""
+      //   });
+      // });
+    }
+  },
   methods: {
-    putResulstInColor(txt, elem) {
-      txt.replace(elem);
-    },
     handleKeyWords() {
-      const regex = /\[.*?\]/g;
-      const match = this.text.match(this.regex);
-      const keyWords = match.map((el) => {
-        console.log({ el });
+      this.keyWordsTable = [];
+      const match = this.text.match(/\[.*?\]/g);
+      match?.map(el => {
+        this.text = this.text.replace(
+          el,
+          `<span style="background-color: rgb(255, 194, 102);">${el}</span>`
+        );
         this.keyWordsTable.push({
           goodAnswer: el.slice(1, -1),
           badAnswer1: "",
-          badAnswer2: "",
+          badAnswer2: ""
         });
       });
-      this.step2 = true;
-      console.log(this.keyWordsTable);
     },
-    handleEditAnswers(e) {
-      e.preventDefault();
-      console.log(this.keyWordsTable[0].goodAnswer);
-    },
+    handleResult() {
+      this.resultTable = [];
+      this.keyWordsTable?.map((elem, index) => {
+        this.resultTable.push([
+          { text: elem.goodAnswer },
+          { text: elem.badAnswer1 },
+          { text: elem.badAnswer2 }
+        ]);
+      });
+      
+      // Faire un objet du style {select: resultTable, text: "le text avant le select" }
+
+      this.result = this.text.replace(/<[^>]*>?/gm, "");
+      const match = this.text.match(/\[.*?\]/g);
+      // v-html sies not work with bootstrap element
+      // match?.map((el, key) => {
+      //   this.result = this.result.replace(
+      //     el,
+      //     '<b-form-select :options="' +
+      //       this.resultTable[key] +
+      //       '" class="exemple-select mx-2"></b-form-select>'
+      //   );
+      // });
+    }
   },
-  mounted() {},
+  mounted() {}
 };
 </script>
 
