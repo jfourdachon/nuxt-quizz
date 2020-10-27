@@ -14,8 +14,8 @@
       ></b-form-select>
     </b-row>
     <b-tabs content-class="mt-3">
-      <b-tab title="Édition" active>
-        <h5>Entrez le(s) résultat final dans le formulaire ci dessous</h5>
+      <b-tab title="Texte" active>
+        <h5>Entrez le texte final dans le formulaire ci dessous</h5>
         <label for="editor"
           >Note: Placez les mots clés(qui seront dans les trous) entre crochets,
           ex: les règles de [sécurité]</label
@@ -28,24 +28,15 @@
             @blur="onLeave"
           ></vue-editor>
         </client-only>
-        {{ text }}
         <b-button variant="outline-success" class="mt-3" @click="handleKeyWords"
           >Suivant</b-button
         >
-        <div class="mt-4" v-if="keyWordsTable.length > 0">
-          <p>Pour chaque bonne réponse, renseignez 2 mauvaises réponses</p>
-          <b-table striped hover :items="keyWordsTable" :fields="fields">
-            <template v-slot:cell(text1)="row">
-              <b-form-input v-model="row.item.text1" />
-            </template>
-            <template v-slot:cell(text2)="row">
-              <b-form-input v-model="row.item.text2" />
-            </template>
-          </b-table>
-        </div>
+      </b-tab>
+       <b-tab title="Édition" @click="handleKeyWords">
+        <TextToFillEditResponse :keyWordsTable="keyWordsTable"></TextToFillEditResponse>
       </b-tab>
       <b-tab title="Résultat" @click="handleResult">
-        <div v-html="result" />
+        <TextToFillResult :result="result"></TextToFillResult>
       </b-tab>
     </b-tabs>
   </div>
@@ -56,21 +47,22 @@ export default {
   data() {
     return {
       text: '',
+      resultTable: [],
       result: [],
       keyWordsTable: [],
       fields: [
-        { text: "Bonne Réponse" },
-        { text1: "Mauvaise Réponse 1" },
-        { text2: "Mauvaise Réponse 2" },
+        { text: 'Bonne Réponse' },
+        { text1: 'Mauvaise Réponse 1' },
+        { text2: 'Mauvaise Réponse 2' },
       ],
       exemple1: [
-        { value: '', text: "pouvez" },
-        { value: '', text: "pourrez" },
+        { value: '', text: 'pouvez' },
+        { value: '', text: 'pourrez' },
       ],
       exemple2: [
-        { value: '', text: "quizz" },
-        { value: '', text: "module" },
-        { value: '', text: "exercice" },
+        { value: '', text: 'quizz' },
+        { value: '', text: 'module' },
+        { value: '', text: 'exercice' },
       ],
       customToolbar: {
         modules: {
@@ -94,33 +86,45 @@ export default {
   },
   methods: {
     handleKeyWords() {
-      this.keyWordsTable = [];
       const match = this.text.match(/\[.*?\]/g);
-      match?.map((el) => {
+      match?.map((el, index) => {
         this.text = this.text.replace(
           el,
           `<span style="background-color: rgb(255, 194, 102);">${el}</span>`
         );
-        this.keyWordsTable.push({
-          text: el.slice(1, -1),
-          text1: '',
-          text2: '',
-        });
+        console.log(this.key);
+        if (!this.keyWordsTable[index]) {
+          this.keyWordsTable.push({
+            text: el.slice(1, -1)
+          });
+        } else {
+          // TODO don't work
+          this.keyWordsTable[index] = {text: el.slice(1, -1)}, {text1: this.keyWordsTable[index].text1}, {text2: this.keyWordsTable[index].text2}
+        }
       });
     },
     handleResult() {
+      this.resultTable = [];
       this.result = [];
+      this.keyWordsTable?.map((elem, index) => {
+        this.resultTable.push([
+          { text: elem.text, goodResponse: true },
+          { text: elem.text1, goodResponse: false },
+          { text: elem.text2, goodResponse: false }
+        ]);
+         this.shuffleArray(this.resultTable[index]);
+      })
       // Remove html tags from editor
       this.text = this.text.replace(/<[^>]*>?/gm, "");
+      this.text = this.text.replace('&nbsp;', "");
       // put editor content in object with both text and select options
       const splittedText = this.text.split(/\[.*?\]/g);
       splittedText.map((elem, key) => {
         elem && this.result.push({ type: 'text', content: elem });
         this.keyWordsTable[key] &&
-          this.result.push({ type: 'array', content: this.keyWordsTable[key] });
+          this.result.push({ type: 'array', content: this.resultTable[key] });
       });
 
-      console.log(this.result);
       //TODO put this.result in a component
     },
     shuffleArray(array) {
@@ -142,13 +146,7 @@ export default {
     onLeave(quill) {
       // add span in editor on Blur
       const match = this.text.match(/\[.*?\]/g);
-      match?.map(
-        (el) =>
-          (this.text = this.text.replace(
-            el,
-            `<span style="background-color: rgb(255, 194, 102);">${el}</span>`
-          ))
-      );
+      match?.map(el => this.text = this.text.replace(el,`<span style="background-color: rgb(255, 194, 102);">${el}</span>`));
     },
   },
 };
