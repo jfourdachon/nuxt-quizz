@@ -23,7 +23,6 @@ export default {
     },
     watch: {
         result(newValue) {
-            console.log({newValue});
             this.contentTab = newValue;
             this.contentTab.forEach(elem => {
                 if (elem.type === 'array') {

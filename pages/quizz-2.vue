@@ -31,9 +31,10 @@
         <b-button variant="outline-success" class="mt-3" @click="handleKeyWords"
           >Suivant</b-button
         >
+        {{keyWordsTable}}
       </b-tab>
        <b-tab title="Édition" @click="handleKeyWords">
-        <TextToFillEditResponse :keyWordsTable="keyWordsTable"></TextToFillEditResponse>
+        <TextToFillEditResponse @changeKeyWordsTable="updateKeyWordsTable" :keyWordsTable="keyWordsTable"></TextToFillEditResponse>
       </b-tab>
       <b-tab title="Résultat" @click="handleResult">
         <TextToFillResult :result="result"></TextToFillResult>
@@ -92,20 +93,15 @@ export default {
           el,
           `<span style="background-color: rgb(255, 194, 102);">${el}</span>`
         );
-        console.log(this.key);
-        if (!this.keyWordsTable[index]) {
-          this.keyWordsTable.push({
-            text: el.slice(1, -1)
-          });
-        } else {
-          // TODO don't work
-          this.keyWordsTable[index] = {text: el.slice(1, -1)}, {text1: this.keyWordsTable[index].text1}, {text2: this.keyWordsTable[index].text2}
-        }
+        if (!this.keyWordsTable[index]) this.keyWordsTable.push({text: el.slice(1, -1)})
+        else if (this.keyWordsTable[index].text === el.slice(1, -1)) this.keyWordsTable[index] = this.keyWordsTable[index]
+        else this.keyWordsTable.splice(index, 1, { text: el.slice(1, -1)  } );
       });
     },
     handleResult() {
       this.resultTable = [];
       this.result = [];
+      console.log(this.keyWordsTable);
       this.keyWordsTable?.map((elem, index) => {
         this.resultTable.push([
           { text: elem.text, goodResponse: true },
@@ -125,7 +121,6 @@ export default {
           this.result.push({ type: 'array', content: this.resultTable[key] });
       });
 
-      //TODO put this.result in a component
     },
     shuffleArray(array) {
       // shuffle options in select
@@ -148,6 +143,10 @@ export default {
       const match = this.text.match(/\[.*?\]/g);
       match?.map(el => this.text = this.text.replace(el,`<span style="background-color: rgb(255, 194, 102);">${el}</span>`));
     },
+    updateKeyWordsTable(newValue) {
+      console.log({newValue});
+      this.keyWordsTable = newValue;
+    }
   },
 };
 </script>
