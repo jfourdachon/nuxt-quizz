@@ -27,7 +27,7 @@ export default {
             this.contentTab.forEach(elem => {
                 if (elem.type === 'array') {
                     const longest = elem.content.reduce(function (a, b) { return a.text.length > b.text.length ? a : b; });
-                    elem['width'] = (longest.text.length) * 10 + 'px'; 
+                    elem['width'] = (longest.text.length) * 5 + 'px'; 
                 }
             })
         }

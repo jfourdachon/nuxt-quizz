@@ -88,26 +88,43 @@ export default {
   methods: {
     handleKeyWords() {
       const match = this.text.match(/\[.*?\]/g);
+      // 1- delete responses array if text has been deleted
+      if (!match) this.keyWordsTable = [];
+      // 2- Reorder responses array if some responses are deletes from text
+      this.keyWordsTable.map((elem, index) => {
+        if (!match.find(el => el === `[${elem.text}]`)) {
+          this.keyWordsTable.splice(index, 1)
+        }
+      })
+      // 3- put matches in responses array with same order and bad responses if they already exist
       match?.map((el, index) => {
         this.text = this.text.replace(
           el,
           `<span style="background-color: rgb(255, 194, 102);">${el}</span>`
         );
+        // new last match
         if (!this.keyWordsTable[index]) this.keyWordsTable.push({text: el.slice(1, -1)})
+        // existing match with bad responses
         else if (this.keyWordsTable[index].text === el.slice(1, -1)) this.keyWordsTable[index] = this.keyWordsTable[index]
-        else this.keyWordsTable.splice(index, 1, { text: el.slice(1, -1)  } );
+        // new match in middle of text
+        else this.keyWordsTable.splice(index, 0, { text: el.slice(1, -1)  } );
       });
     },
     handleResult() {
       this.resultTable = [];
       this.result = [];
-      console.log(this.keyWordsTable);
+      // put response in new table with same key + boolean
       this.keyWordsTable?.map((elem, index) => {
         this.resultTable.push([
           { text: elem.text, goodResponse: true },
           { text: elem.text1, goodResponse: false },
           { text: elem.text2, goodResponse: false }
         ]);
+        // delete in array with no bad response
+        this.resultTable[index].map((el, key) => {
+          if (!el.text) this.resultTable[index].splice(key, 1) 
+        })
+        // mix array 
          this.shuffleArray(this.resultTable[index]);
       })
       // Remove html tags from editor
@@ -120,7 +137,6 @@ export default {
         this.keyWordsTable[key] &&
           this.result.push({ type: 'array', content: this.resultTable[key] });
       });
-
     },
     shuffleArray(array) {
       // shuffle options in select
@@ -144,7 +160,6 @@ export default {
       match?.map(el => this.text = this.text.replace(el,`<span style="background-color: rgb(255, 194, 102);">${el}</span>`));
     },
     updateKeyWordsTable(newValue) {
-      console.log({newValue});
       this.keyWordsTable = newValue;
     }
   },
