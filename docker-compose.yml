@@ -9,6 +9,6 @@ services:
     volumes: 
       - /nuxt-app/node_modules
       - .:/nuxt-app
-      - $SSH_AUTH_SOCK:/ssh-agent # Forward local machine SSH key to docker
+      - /run/host-services/ssh-auth.sock:/ssh-agent # Forward local machine SSH key to docker
     environment:
       SSH_AUTH_SOCK: /ssh-agent
