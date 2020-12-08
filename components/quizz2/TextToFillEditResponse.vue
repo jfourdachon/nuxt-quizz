@@ -10,7 +10,7 @@
                     <b-form-input v-model="row.item.text1" />
                 </template>
                 <template v-slot:cell(text2)="row">
-                    <b-form-input v-model="row.item.text2" />
+                    <b-form-input :state="false" v-model="row.item.text2" />
                 </template>
             </b-table>
             {{ keyWordsTable }}

@@ -3,10 +3,10 @@
         <span v-for="(item, key) in contentTab" :key="key" >
             <span v-if="item.type === 'text'" >{{item.content}}</span>
             <span v-else class="span">
-                <b-form-select v-bind:style="'width: ' + item.content.width" :options="item.content" class="mx-1"></b-form-select>
+                <b-form-select :options="item.content" class="mx-1"></b-form-select>
             </span>
         </span>
-        <pre>{{contentTab}}</pre>
+        <!-- <pre>{{contentTab}}</pre> -->
     </div>
 </template>
 
@@ -24,12 +24,12 @@ export default {
     watch: {
         result(newValue) {
             this.contentTab = newValue;
-            this.contentTab.forEach(elem => {
-                if (elem.type === 'array') {
-                    const longest = elem.content.reduce(function (a, b) { return a.text.length > b.text.length ? a : b; });
-                    elem['width'] = (longest.text.length) * 5 + 'px'; 
-                }
-            })
+            // this.contentTab.forEach(elem => {
+            //     if (elem.type === 'array') {
+            //         const longest = elem.content.reduce(function (a, b) { return a.text.length > b.text.length ? a : b; });
+            //         elem['width'] = (longest.text.length) * 56 + 'px'; 
+            //     }
+            // })
         }
     },
 }

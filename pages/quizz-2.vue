@@ -31,7 +31,6 @@
         <b-button variant="outline-success" class="mt-3" @click="handleKeyWords"
           >Suivant</b-button
         >
-        {{keyWordsTable}}
       </b-tab>
        <b-tab title="Édition" @click="handleKeyWords">
         <TextToFillEditResponse @changeKeyWordsTable="updateKeyWordsTable" :keyWordsTable="keyWordsTable"></TextToFillEditResponse>
