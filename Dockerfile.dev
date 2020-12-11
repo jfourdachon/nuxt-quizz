@@ -10,8 +10,10 @@ RUN apk update && apk upgrade
 RUN apk add git
 
 # copy the app, note .dockerignore
-COPY . /nuxt-app
-RUN yarn
+COPY /package.json /nuxt-app
+RUN npm install
+
+COPY . .
 # RUN yarn build    -> production mode
 
 EXPOSE 8500
@@ -19,4 +21,4 @@ EXPOSE 8500
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=8500
 
-CMD ["yarn", "dev"]
+CMD ["npm", "run", "dev"]
