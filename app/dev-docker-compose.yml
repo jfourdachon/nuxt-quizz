@@ -1,0 +1,11 @@
+version: '3'
+services:
+  nuxt-quizz:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8500:8500"
+    volumes: 
+      - /nuxt-app/node_modules
+      - .:/nuxt-app

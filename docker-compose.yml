@@ -1,11 +1,19 @@
-version: '3'
+version: "3"
+
 services:
-  nuxt-quizz:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
+  nuxt:
+    build: ./app/
+    restart: always
     ports:
-      - "8500:8500"
-    volumes: 
-      - /nuxt-app/node_modules
-      - .:/nuxt-app
+      - "3000:3000"
+    command:
+      "npm run start"
+
+  nginx:
+    image: nginx:1.19
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - nuxt

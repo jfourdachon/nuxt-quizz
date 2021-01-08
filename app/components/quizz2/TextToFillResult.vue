@@ -6,7 +6,7 @@
                 <b-form-select :options="item.content" class="mx-1"></b-form-select>
             </span>
         </span>
-        <!-- <pre>{{contentTab}}</pre> -->
+        <pre>{{contentTab}}</pre>
     </div>
 </template>
 
@@ -24,17 +24,12 @@ export default {
     watch: {
         result(newValue) {
             this.contentTab = newValue;
-            // this.contentTab.forEach(elem => {
-            //     if (elem.type === 'array') {
-            //         const longest = elem.content.reduce(function (a, b) { return a.text.length > b.text.length ? a : b; });
-            //         elem['width'] = (longest.text.length) * 56 + 'px'; 
-            //     }
-            // })
         }
     },
 }
 </script>
 <style scoped>
+/* unset bootstrap select default size */
 .custom-select {
     width: unset;
 }

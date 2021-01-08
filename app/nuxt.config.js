@@ -1,6 +1,6 @@
 export default {
   server: {
-    port: 8500, // par défaut : 3000
+    // port: 8500, // par défaut : 3000
     host: "0.0.0.0" // par défaut : localhost
   },
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -35,7 +35,9 @@ export default {
     // https://go.nuxtjs.dev/pwa
     "@nuxtjs/pwa"
   ],
-
+  bootstrapVue: {
+    icons: true,
+},
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
    //   bootstrapVue: {

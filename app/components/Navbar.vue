@@ -12,7 +12,7 @@
         </nuxt-link>
       </b-col>
       <b-col  class="text-center py-3 border-right">
-        <nuxt-link to="/Quizz3">
+        <nuxt-link to="/draglist">
           <h5 class="pt-3 pb-3">Drag list</h5>
         </nuxt-link>
       </b-col>
@@ -24,7 +24,7 @@
       </b-col>
       <b-col  class="text-center py-3">
         <nuxt-link to="/Quizz5">
-          <h5 class="pt-3 pb-3">Drag family</h5>
+          <h5 class="pt-3 pb-3">Drag Category</h5>
         </nuxt-link>
       </b-col>
       <p></p>
