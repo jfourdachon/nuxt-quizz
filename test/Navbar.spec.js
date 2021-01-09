@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import Vue from "vue";
 import Navbar from '../components/Navbar.vue'
 
 describe("Navbar", () => {
