@@ -10,10 +10,9 @@ RUN apk update && apk upgrade
 RUN apk add git
 
 # copy the app, note .dockerignore
-COPY ./package.json /src
+COPY . .
 RUN npm install
 
-COPY . .
 # RUN yarn build    -> production mode
 
 EXPOSE 8500
