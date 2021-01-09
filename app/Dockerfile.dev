@@ -2,15 +2,15 @@
 FROM node:14.15.1-alpine
 
 # create destination directory
-RUN mkdir -p /nuxt-app
-WORKDIR /nuxt-app
+RUN mkdir -p /src
+WORKDIR /src
 
 # update and install dependency
 RUN apk update && apk upgrade
 RUN apk add git
 
 # copy the app, note .dockerignore
-COPY /package.json /nuxt-app
+COPY /package.json /src
 RUN npm install
 
 COPY . .
