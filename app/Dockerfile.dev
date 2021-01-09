@@ -10,7 +10,7 @@ RUN apk update && apk upgrade
 RUN apk add git
 
 # copy the app, note .dockerignore
-COPY /package.json /src
+COPY ./package.json /src
 RUN npm install
 
 COPY . .
