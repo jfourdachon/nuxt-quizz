@@ -10,8 +10,10 @@ RUN apk update && apk upgrade
 RUN apk add git
 
 # copy the app, note .dockerignore
-COPY . .
+COPY package.json /src
 RUN npm install
+
+COPY . /src
 
 # RUN yarn build    -> production mode
 
