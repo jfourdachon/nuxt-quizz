@@ -34,8 +34,3 @@
 
 <style scoped src="~/assets/css/navbar.css"></style>
 
-<script>
-export default {
-    name: NavBar
-}
-</script>
