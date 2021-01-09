@@ -2,16 +2,17 @@
 FROM node:14.15.1-alpine
 
 # create destination directory
-RUN mkdir -p /src
-WORKDIR /src
+WORKDIR /app
 
 # update and install dependency
 RUN apk update && apk upgrade
 RUN apk add git
 
 # copy the app, note .dockerignore
-COPY . /src
+COPY package.json .
 RUN npm install
+
+COPY . .
 
 
 # RUN yarn build    -> production mode
