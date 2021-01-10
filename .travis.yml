@@ -18,7 +18,7 @@ deploy:
   secret_access_key: $AWS_SECRET_KEY
   region: "us-east-2"
   app: "nuxt-quizz"
-  env: "NuxtQuizz-env"
+  env: "NuxtQuizz-env-1"
   bucket_name: "elasticbeanstalk-us-east-2-589682127985"
   bucket_path: "nuxt-quizz"
   on:
