@@ -23,6 +23,5 @@ deploy:
   env: "NuxtQuizz-env"
   bucket_name: "elasticbeanstalk-us-east-2-589682127985"
   bucket_path: "nuxt-quizz"
-  branches:
-    only:
-    - master
+  on:
+    branch: master
