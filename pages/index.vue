@@ -1,6 +1,6 @@
 <template>
   <div >
-    Hello world!
+    Hello world sur AWS
   </div>
 </template>
 
