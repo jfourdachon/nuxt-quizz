@@ -1,6 +1,6 @@
 <template>
   <div >
-    Hello world sur AWS
+    Ici le quizz avec les iamges sur S3
   </div>
 </template>
 
