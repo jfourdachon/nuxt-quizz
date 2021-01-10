@@ -1,8 +1,14 @@
-FROM node:14.11-buster-slim
+# Dockerfile
+FROM node:14.15.1-alpine
 
-RUN apt-get update
+# create destination directory
+WORKDIR /app
 
-ENV APP_ROOT /src
+# update and install dependency
+RUN apk update && apk upgrade
+RUN apk add git
+
+ENV APP_ROOT /app
 
 WORKDIR ${APP_ROOT}
 COPY . ${APP_ROOT}

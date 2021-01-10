@@ -11,3 +11,18 @@ before_install:
 
 script:
   - docker run -e CI=true jfourdachon/nuxt-quizz npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id:
+    secure: "$AWS_ACCESS_KEY"
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
+  region: "us-east-2"
+  app: "nuxt-quizz"
+  env: "NuxtQuizz-env"
+  bucket_name: "elasticbeanstalk-us-east-2-589682127985"
+  bucket_path: "nuxt-quizz"
+  branches:
+    only:
+    - master
